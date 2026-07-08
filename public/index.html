@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corrector de Sintaxis Automatizado</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Corrector de Código Express</h1>
+        <p>Pega tu código dañado a la izquierda para repararlo instantáneamente.</p>
+        
+        <div class="editors">
+            <textarea id="codigoSucio" placeholder="Pega tu código con errores aquí..."></textarea>
+            <textarea id="codigoLimpio" placeholder="Tu código corregido aparecerá aquí..." readonly></textarea>
+        </div>
+
+        <div class="actions">
+            <button id="btnCorregir" class="primary">Corregir Código</button>
+            <button id="btnBorrar" class="danger">Borrar Todo</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
