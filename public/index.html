@@ -3,22 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corrector de Sintaxis Automatizado</title>
+    <title>Generador de Sistemas Autónomo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Corrector de Código Express</h1>
-        <p>Pega tu código dañado a la izquierda para repararlo instantáneamente.</p>
-        
-        <div class="editors">
-            <textarea id="codigoSucio" placeholder="Pega tu código con errores aquí..."></textarea>
-            <textarea id="codigoLimpio" placeholder="Tu código corregido aparecerá aquí..." readonly></textarea>
+        <header>
+            <h1>Generador de Sistemas Autónomo</h1>
+            <p>Ingeniería de Software de Alta Precisión sin Límites de Tamaño</p>
+        </header>
+
+        <!-- Pestañas de Navegación -->
+        <div class="tabs">
+            <button id="tabExpress" class="tab-btn active">Corrector Express</button>
+            <button id="tabAutonomo" class="tab-btn">Generador de Sistemas (3 Archivos)</button>
         </div>
 
-        <div class="actions">
-            <button id="btnCorregir" class="primary">Corregir Código</button>
-            <button id="btnBorrar" class="danger">Borrar Todo</button>
+        <!-- SECCIÓN 1: CORRECTOR EXPRESS -->
+        <div id="moduloExpress" class="modulo active">
+            <div class="editors">
+                <textarea id="codigoSucio" placeholder="Pega tu código roto aquí..."></textarea>
+                <textarea id="codigoLimpio" placeholder="El código limpio aparecerá aquí..." readonly></textarea>
+            </div>
+            <div class="actions">
+                <button id="btnCorregir" class="primary">Corregir Código</button>
+                <button id="btnBorrarExpress" class="danger">Borrar Todo</button>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: GENERADOR AVANZADO -->
+        <div id="moduloAutonomo" class="modulo">
+            <div class="prompt-section">
+                <label><strong>Descripción del Sistema / Requerimientos de Conexión:</strong></label>
+                <textarea id="appDescripcion" class="short-txt" placeholder="Ej: Vincula estos códigos para una app de tareas, asegurando que las funciones JS llamen a los IDs del HTML..."></textarea>
+            </div>
+
+            <div class="triple-grid">
+                <div class="panel">
+                    <h3>Archivo Backend / Principal</h3>
+                    <textarea id="code1" placeholder="Código 1 (Ej: server.py, app.js)..."></textarea>
+                </div>
+                <div class="panel">
+                    <h3>Archivo Frontend / Interfaz</h3>
+                    <textarea id="code2" placeholder="Código 2 (Ej: index.html, ui.py)..."></textarea>
+                </div>
+                <div class="panel">
+                    <h3>Archivo Lógica / Estilos</h3>
+                    <textarea id="code3" placeholder="Código 3 (Ej: script.js, style.css)..."></textarea>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="btnConstruir" class="success">Vincular y Rectificar Sistema</button>
+                <button id="btnBorrarAutonomo" class="danger">Borrar Todo el Sistema</button>
+            </div>
+
+            <div class="report-section">
+                <h3>Sugerencias de Arquitectura y Errores Detectados</h3>
+                <div id="sugerenciasPanel">Las sugerencias aparecerán aquí tras procesar...</div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
