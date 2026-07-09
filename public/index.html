@@ -3,65 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Sistemas Autónomo</title>
+    <title>Suite de Ingeniería de Software</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Generador de Sistemas Autónomo</h1>
-            <p>Ingeniería de Software de Alta Precisión sin Límites de Tamaño</p>
+            <h1>Generador y Auditor de Sistemas Autónomo</h1>
+            <p>Sistemas Completos de Alta Precisión • Procesamiento Seguro en RAM Local</p>
         </header>
 
-        <!-- Pestañas de Navegación -->
-        <div class="tabs">
-            <button id="tabExpress" class="tab-btn active">Corrector Express</button>
-            <button id="tabAutonomo" class="tab-btn">Generador de Sistemas (3 Archivos)</button>
+        <!-- CAJA DE DESCRIPCIÓN PRINCIPAL -->
+        <div class="prompt-section">
+            <label><strong>Describe tu objetivo (¿Qué debe hacer la App o cómo deben interactuar los códigos?):</strong></label>
+            <textarea id="appDescripcion" class="short-txt" placeholder="Ej: Crea una app de inventario... / Revisa por qué no conectan estos archivos... / Corrige las comas de mi código..."></textarea>
         </div>
 
-        <!-- SECCIÓN 1: CORRECTOR EXPRESS -->
-        <div id="moduloExpress" class="modulo active">
-            <div class="editors">
-                <textarea id="codigoSucio" placeholder="Pega tu código roto aquí..."></textarea>
-                <textarea id="codigoLimpio" placeholder="El código limpio aparecerá aquí..." readonly></textarea>
+        <!-- REJILLA DE LOS 3 PANELES DE CÓDIGO -->
+        <div class="triple-grid">
+            <div class="panel">
+                <h3>Archivo 1 (Backend / Servidor)</h3>
+                <textarea id="code1" placeholder="Código principal o Backend aparecerá o se pega aquí..."></textarea>
             </div>
-            <div class="actions">
-                <button id="btnCorregir" class="primary">Corregir Código</button>
-                <button id="btnBorrarExpress" class="danger">Borrar Todo</button>
+            <div class="panel">
+                <h3>Archivo 2 (Interfaz / Frontend)</h3>
+                <textarea id="code2" placeholder="Código visual o HTML aparecerá o se pega aquí..."></textarea>
+            </div>
+            <div class="panel">
+                <h3>Archivo 3 (Lógica / Estilos / JS)</h3>
+                <textarea id="code3" placeholder="Código interactivo, estilos o JS aparecerá o se pega aquí..."></textarea>
             </div>
         </div>
 
-        <!-- SECCIÓN 2: GENERADOR AVANZADO -->
-        <div id="moduloAutonomo" class="modulo">
-            <div class="prompt-section">
-                <label><strong>Descripción del Sistema / Requerimientos de Conexión:</strong></label>
-                <textarea id="appDescripcion" class="short-txt" placeholder="Ej: Vincula estos códigos para una app de tareas, asegurando que las funciones JS llamen a los IDs del HTML..."></textarea>
-            </div>
+        <!-- PANEL DE BOTONES GUIADOS DE OPERACIÓN -->
+        <div class="actions-suite">
+            <button id="btnCrear" class="btn-action pulse">🚀 Crear Aplicación</button>
+            <button id="btnRevisar" class="btn-action info">🔍 Revisión de Apps y Códigos</button>
+            <button id="btnCorregir" class="btn-action success">🛠️ Corrección de Códigos</button>
+            <button id="btnBorrarTodo" class="btn-action danger">🗑️ Borrar Todo (Limpieza RAM)</button>
+        </div>
 
-            <div class="triple-grid">
-                <div class="panel">
-                    <h3>Archivo Backend / Principal</h3>
-                    <textarea id="code1" placeholder="Código 1 (Ej: server.py, app.js)..."></textarea>
-                </div>
-                <div class="panel">
-                    <h3>Archivo Frontend / Interfaz</h3>
-                    <textarea id="code2" placeholder="Código 2 (Ej: index.html, ui.py)..."></textarea>
-                </div>
-                <div class="panel">
-                    <h3>Archivo Lógica / Estilos</h3>
-                    <textarea id="code3" placeholder="Código 3 (Ej: script.js, style.css)..."></textarea>
-                </div>
-            </div>
-
-            <div class="actions">
-                <button id="btnConstruir" class="success">Vincular y Rectificar Sistema</button>
-                <button id="btnBorrarAutonomo" class="danger">Borrar Todo el Sistema</button>
-            </div>
-
-            <div class="report-section">
-                <h3>Sugerencias de Arquitectura y Errores Detectados</h3>
-                <div id="sugerenciasPanel">Las sugerencias aparecerán aquí tras procesar...</div>
-            </div>
+        <!-- PANEL DE EXPLICACIONES Y SUGERENCIAS -->
+        <div class="report-section">
+            <h3>Explicación del Proceso, Guías y Errores</h3>
+            <div id="sugerenciasPanel">El Maestro de Codificación te guiará aquí paso a paso...</div>
         </div>
     </div>
     <script src="script.js"></script>
