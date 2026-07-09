@@ -1,60 +1,36 @@
-// Control de Pestañas
-document.getElementById('tabExpress').addEventListener('click', () => cambiarPestana('tabExpress', 'moduloExpress'));
-document.getElementById('tabAutonomo').addEventListener('click', () => cambiarPestana('tabAutonomo', 'moduloAutonomo'));
+// Asignación de eventos a los botones guiados
+document.getElementById('btnCrear').addEventListener('click', () => procesarOperacion('/crear_app'));
+document.getElementById('btnRevisar').addEventListener('click', () => procesarOperacion('/revisar_app'));
+document.getElementById('btnCorregir').addEventListener('click', () => procesarOperacion('/corregir_app'));
 
-function cambiarPestana(tabId, moduloId) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.modulo').forEach(m => m.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    document.getElementById(moduloId).classList.add('active');
-}
-
-// BOTONES DE BORRADO SEGURO (Evitan la sobrecarga de datos en la pantalla)
-document.getElementById('btnBorrarExpress').addEventListener('click', () => {
-    document.getElementById('codigoSucio').value = "";
-    document.getElementById('codigoLimpio').value = "";
-});
-
-document.getElementById('btnBorrarAutonomo').addEventListener('click', () => {
+// BOTÓN DE BORRADO ABSOLUTO (Limpia toda la RAM local al instante)
+document.getElementById('btnBorrarTodo').addEventListener('click', () => {
     document.getElementById('appDescripcion').value = "";
     document.getElementById('code1').value = "";
     document.getElementById('code2').value = "";
     document.getElementById('code3').value = "";
-    document.getElementById('sugerenciasPanel').innerText = "Las sugerencias aparecerán aquí tras procesar...";
+    document.getElementById('sugerenciasPanel').innerText = "El Maestro de Codificación te guiará aquí paso a paso...";
+    // Sugerimos al navegador liberar los hilos de memoria asignados
+    window.gc && window.gc();
 });
 
-// Lógica de Ejecución Express
-document.getElementById('btnCorregir').addEventListener('click', async () => {
-    const btn = document.getElementById('btnCorregir');
-    const input = document.getElementById('codigoSucio').value;
-    if (!input.trim()) return alert("Por favor, ingresa código primero.");
-    
-    btn.innerText = "Corrigiendo..."; btn.disabled = true;
-    try {
-        const response = await fetch('/corregir', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ codigo: input })
-        });
-        const data = await response.json();
-        document.getElementById('codigoLimpio').value = data.codigoCorregido || data.error;
-    } catch(e) { 
-        alert("Error de red al conectar con el servidor."); 
-    } finally {
-        btn.innerText = "Corregir Código"; btn.disabled = false;
-    }
-});
-
-// Lógica de Ingeniería Avanzada (Procesamiento por Fragmentos / Streaming)
-document.getElementById('btnConstruir').addEventListener('click', async () => {
-    const btn = document.getElementById('btnConstruir');
+// Función unificada que maneja el Streaming en tiempo real para evitar congelamientos
+async function procesarOperacion(endpoint) {
     const desc = document.getElementById('appDescripcion').value;
-    
-    btn.innerText = "Sincronizando Archivos..."; btn.disabled = true;
-    document.getElementById('sugerenciasPanel').innerText = "Abriendo canal de flujo continuo...";
+    const btnCrear = document.getElementById('btnCrear');
+    const btnRevisar = document.getElementById('btnRevisar');
+    const btnCorregir = document.getElementById('btnCorregir');
+
+    if (!desc.trim() && endpoint === '/crear_app') {
+        return alert("Por favor, describe la aplicación que deseas crear en la caja superior.");
+    }
+
+    // Bloqueamos los botones durante la ejecución para proteger el canal de datos
+    [btnCrear, btnRevisar, btnCorregir].forEach(b => b.disabled = true);
+    document.getElementById('sugerenciasPanel').innerText = "Estableciendo conexión segura con el motor de IA en tiempo real...";
 
     try {
-        const response = await fetch('/generar_sistema', {
+        const response = await fetch(endpoint, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -75,36 +51,54 @@ document.getElementById('btnConstruir').addEventListener('click', async () => {
             
             acumuladorText += decoder.decode(value, { stream: true });
             
-            // Va dividiendo el texto y rellenando los paneles en tiempo real mientras descarga
-            inyectarTextoEnPaneles(acumuladorText);
+            // Procesa y distribuye dinámicamente el texto en las cajas correspondientes
+            inyectarTextoEnPanelesStrict(acumuladorText);
         }
     } catch (error) {
-        alert("La transmisión de códigos se interrumpió.");
+        alert("La transmisión se interrumpió. Verifica tu conexión a internet.");
     } finally {
-        btn.innerText = "Vincular y Rectificar Sistema"; btn.disabled = false;
+        // Desbloqueamos los botones al terminar
+        [btnCrear, btnRevisar, btnCorregir].forEach(b => b.disabled = false);
     }
-});
+}
 
-// Parsea el bloque completo buscando los divisores e inyecta el contenido dinámicamente
-function inyectarTextoEnPaneles(texto) {
-    const marca1 = texto.indexOf("===ARCHIVO1===");
-    const marca2 = texto.indexOf("===ARCHIVO2===");
-    const marca3 = texto.indexOf("===ARCHIVO3===");
-    const marcaS = texto.indexOf("===SUGERENCIAS===");
+// Algoritmo de separación estricto para evitar cortes de cable visuales
+function inyectarTextoEnPanelesStrict(texto) {
+    const marcas = {
+        '===ARCHIVO1===': 'code1',
+        '===ARCHIVO2===': 'code2',
+        '===ARCHIVO3===': 'code3',
+        '===SUGERENCIAS===': 'sugerenciasPanel'
+    };
 
-    if (marca1 !== -1) {
-        let fin = (marca2 !== -1) ? marca2 : texto.length;
-        document.getElementById('code1').value = texto.substring(marca1 + 14, fin).trim();
-    }
-    if (marca2 !== -1) {
-        let fin = (marca3 !== -1) ? marca3 : texto.length;
-        document.getElementById('code2').value = texto.substring(marca2 + 14, fin).trim();
-    }
-    if (marca3 !== -1) {
-        let fin = (marcaS !== -1) ? marcaS : texto.length;
-        document.getElementById('code3').value = texto.substring(marca3 + 14, fin).trim();
-    }
-    if (marcaS !== -1) {
-        document.getElementById('sugerenciasPanel').innerText = texto.substring(marcaS + 17).trim();
+    const llaves = Object.keys(marcas);
+    
+    for (let i = 0; i < llaves.length; i++) {
+        const marcaActual = llaves[i];
+        const idElemento = marcas[marcaActual];
+        const indexInicio = texto.indexOf(marcaActual);
+        
+        if (indexInicio !== -1) {
+            let indexFin = texto.length;
+            
+            for (let j = 0; j < llaves.length; j++) {
+                const otraMarca = llaves[j];
+                const indexOtra = texto.indexOf(otraMarca);
+                if (indexOtra !== -1 && indexOtra > indexInicio && indexOtra < indexFin) {
+                    indexFin = indexOtra;
+                }
+            }
+            
+            const contenidoLimpio = texto.substring(indexInicio + marcaActual.length, indexFin).trim();
+            const elemento = document.getElementById(idElemento);
+            
+            if (elemento) {
+                if (idElemento === 'sugerenciasPanel') {
+                    elemento.innerText = contenidoLimpio;
+                } else {
+                    elemento.value = contenidoLimpio;
+                }
+            }
+        }
     }
 }
