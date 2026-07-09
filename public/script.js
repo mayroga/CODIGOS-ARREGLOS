@@ -1,104 +1,99 @@
-// Asignación de eventos a los botones guiados
-document.getElementById('btnCrear').addEventListener('click', () => procesarOperacion('/crear_app'));
-document.getElementById('btnRevisar').addEventListener('click', () => procesarOperacion('/revisar_app'));
-document.getElementById('btnCorregir').addEventListener('click', () => procesarOperacion('/corregir_app'));
+document.getElementById('btnCrear').addEventListener('click', () => lanzarProceso('/crear_app'));
+document.getElementById('btnRevisar').addEventListener('click', () => lanzarProceso('/revisar_app'));
+document.getElementById('btnCorregir').addEventListener('click', () => lanzarProceso('/corregir_app'));
 
-// BOTÓN DE BORRADO ABSOLUTO (Limpia toda la RAM local al instante)
+// BOTÓN DE DESTRUCCIÓN DE DATOS LOCAL
 document.getElementById('btnBorrarTodo').addEventListener('click', () => {
     document.getElementById('appDescripcion').value = "";
-    document.getElementById('code1').value = "";
-    document.getElementById('code2').value = "";
-    document.getElementById('code3').value = "";
-    document.getElementById('sugerenciasPanel').innerText = "El Maestro de Codificación te guiará aquí paso a paso...";
-    // Sugerimos al navegador liberar los hilos de memoria asignados
-    window.gc && window.gc();
+    document.getElementById('sugerenciasPanel').innerText = "Las guías maestras y las explicaciones completas de tus códigos empaquetados aparecerán aquí...";
+    for (let i = 1; i <= 5; i++) {
+        document.getElementById(`code${i}`).value = "";
+    }
+    window.gc && window.gc(); // Forzar recolección de basura si el dispositivo lo admite
 });
 
-// Función unificada que maneja el Streaming en tiempo real para evitar congelamientos
-async function procesarOperacion(endpoint) {
+async function lanzarProceso(endpoint) {
     const desc = document.getElementById('appDescripcion').value;
     const btnCrear = document.getElementById('btnCrear');
     const btnRevisar = document.getElementById('btnRevisar');
     const btnCorregir = document.getElementById('btnCorregir');
 
     if (!desc.trim() && endpoint === '/crear_app') {
-        return alert("Por favor, describe la aplicación que deseas crear en la caja superior.");
+        return alert("Por favor, introduce la descripción técnica del sistema que deseas crear.");
     }
 
-    // Bloqueamos los botones durante la ejecución para proteger el canal de datos
     [btnCrear, btnRevisar, btnCorregir].forEach(b => b.disabled = true);
-    document.getElementById('sugerenciasPanel').innerText = "Estableciendo conexión segura con el motor de IA en tiempo real...";
+    document.getElementById('sugerenciasPanel').innerText = "Abriendo hilos de procesamiento síncrono. Sincronizando dependencias cruzadas...";
 
     try {
+        // Recopilamos nombres y contenidos dinámicos del formulario
+        const payload = { descripcion: desc };
+        for (let i = 1; i <= 5; i++) {
+            payload[`nombre${i}`] = document.getElementById(`name${i}`).value;
+            payload[`codigo${i}`] = document.getElementById(`code${i}`).value;
+        }
+
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                descripcion: desc,
-                codigo1: document.getElementById('code1').value,
-                codigo2: document.getElementById('code2').value,
-                codigo3: document.getElementById('code3').value
-            })
+            body: JSON.stringify(payload)
         });
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
-        let acumuladorText = "";
+        let streamAcumulado = "";
 
         while (true) {
             const { value, done } = await reader.read();
             if (done) break;
             
-            acumuladorText += decoder.decode(value, { stream: true });
-            
-            // Procesa y distribuye dinámicamente el texto en las cajas correspondientes
-            inyectarTextoEnPanelesStrict(acumuladorText);
+            streamAcumulado += decoder.decode(value, { stream: true });
+            procesarStreamMultiArchivo(streamAcumulado);
         }
     } catch (error) {
-        alert("La transmisión se interrumpió. Verifica tu conexión a internet.");
+        alert("La conexión con el motor de procesamiento local se vio interrumpida.");
     } finally {
-        // Desbloqueamos los botones al terminar
         [btnCrear, btnRevisar, btnCorregir].forEach(b => b.disabled = false);
     }
 }
 
-// Algoritmo de separación estricto para evitar cortes de cable visuales
-function inyectarTextoEnPanelesStrict(texto) {
-    const marcas = {
-        '===ARCHIVO1===': 'code1',
-        '===ARCHIVO2===': 'code2',
-        '===ARCHIVO3===': 'code3',
-        '===SUGERENCIAS===': 'sugerenciasPanel'
-    };
+// Algoritmo de extracción estricta basado en bloques abiertos :::INICIO::: y :::FIN:::
+function procesarStreamMultiArchivo(texto) {
+    // 1. Procesar Sugerencias / Explicación del Maestro
+    const inicioSuj = texto.indexOf(":::INICIO_SUGERENCIAS:::");
+    const finSuj = texto.indexOf(":::FIN_SUGERENCIAS:::");
+    if (inicioSuj !== -1) {
+        const corteFin = (finSuj !== -1) ? finSuj : texto.length;
+        document.getElementById('sugerenciasPanel').innerText = texto.substring(inicioSuj + 24, corteFin).trim();
+    }
 
-    const llaves = Object.keys(marcas);
-    
-    for (let i = 0; i < llaves.length; i++) {
-        const marcaActual = llaves[i];
-        const idElemento = marcas[marcaActual];
-        const indexInicio = texto.indexOf(marcaActual);
-        
-        if (indexInicio !== -1) {
-            let indexFin = texto.length;
-            
-            for (let j = 0; j < llaves.length; j++) {
-                const otraMarca = llaves[j];
-                const indexOtra = texto.indexOf(otraMarca);
-                if (indexOtra !== -1 && indexOtra > indexInicio && indexOtra < indexFin) {
-                    indexFin = indexOtra;
+    // 2. Procesar los hasta 5 archivos dinámicos de forma secuencial
+    let posicionActual = 0;
+    let contadorPaneles = 1;
+
+    while (texto.indexOf(":::INICIO_ARCHIVO:::", posicionActual) !== -1 && contadorPaneles <= 5) {
+        const inicioM = texto.indexOf(":::INICIO_ARCHIVO:::", posicionActual);
+        const saltoLinea = texto.indexOf("\n", inicioM);
+        const finM = texto.indexOf(":::FIN_ARCHIVO:::", inicioM);
+
+        if (saltoLinea !== -1 && saltoLinea > inicioM) {
+            // Extraer el nombre que propuso la IA para contrastarlo o inyectarlo
+            const encabezado = texto.substring(inicioM + 20, saltoLinea).trim();
+            const finBloque = (finM !== -1) ? finM : texto.length;
+            const codigoLimpio = texto.substring(saltoLinea + 1, finBloque).trim();
+
+            const inputNombre = document.getElementById(`name${contadorPaneles}`);
+            const areaCodigo = document.getElementById(`code${contadorPaneles}`);
+
+            if (areaCodigo) {
+                if (encabezado && inputNombre.value.trim() === "") {
+                    inputNombre.value = encabezado; // Si el panel estaba vacío, le asignamos el nombre sugerido
                 }
-            }
-            
-            const contenidoLimpio = texto.substring(indexInicio + marcaActual.length, indexFin).trim();
-            const elemento = document.getElementById(idElemento);
-            
-            if (elemento) {
-                if (idElemento === 'sugerenciasPanel') {
-                    elemento.innerText = contenidoLimpio;
-                } else {
-                    elemento.value = contenidoLimpio;
-                }
+                areaCodigo.value = codigoLimpio;
             }
         }
+        
+        posicionActual = (finM !== -1) ? finM + 17 : texto.length;
+        contadorPaneles++;
     }
 }
