@@ -3,39 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suite de Ingeniería de Software</title>
+    <title>Suite Universitaria de Desarrollo Autónomo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Generador y Auditor de Sistemas Autónomo</h1>
-            <p>Sistemas Completos de Alta Precisión • Procesamiento Seguro en RAM Local</p>
+            <h1>Ingeniería de Software de Alta Precisión</h1>
+            <p>Corrección, Creación y Alineación de Sistemas Multiarchivo en RAM Local</p>
         </header>
 
         <!-- CAJA DE DESCRIPCIÓN PRINCIPAL -->
         <div class="prompt-section">
-            <label><strong>Describe tu objetivo (¿Qué debe hacer la App o cómo deben interactuar los códigos?):</strong></label>
-            <textarea id="appDescripcion" class="short-txt" placeholder="Ej: Crea una app de inventario... / Revisa por qué no conectan estos archivos... / Corrige las comas de mi código..."></textarea>
+            <label><strong>Descripción del Sistema, Requerimientos o Instrucciones del Maestro:</strong></label>
+            <textarea id="appDescripcion" class="short-txt" placeholder="Describe qué debe hacer el sistema o qué procesos deseas que te explique detalladamente..."></textarea>
         </div>
 
-        <!-- REJILLA DE LOS 3 PANELES DE CÓDIGO -->
-        <div class="triple-grid">
-            <div class="panel">
-                <h3>Archivo 1 (Backend / Servidor)</h3>
-                <textarea id="code1" placeholder="Código principal o Backend aparecerá o se pega aquí..."></textarea>
+        <!-- REJILLA DE 5 PANELES DINÁMICOS -->
+        <div class="quintuple-grid">
+            <!-- PANEL 1 -->
+            <div class="panel-card">
+                <input type="text" id="name1" class="file-name" value="server.py" placeholder="Nombre de Archivo 1">
+                <textarea id="code1" placeholder="Pega o genera el código 1..."></textarea>
             </div>
-            <div class="panel">
-                <h3>Archivo 2 (Interfaz / Frontend)</h3>
-                <textarea id="code2" placeholder="Código visual o HTML aparecerá o se pega aquí..."></textarea>
+            <!-- PANEL 2 -->
+            <div class="panel-card">
+                <input type="text" id="name2" class="file-name" value="index.html" placeholder="Nombre de Archivo 2">
+                <textarea id="code2" placeholder="Pega o genera el código 2..."></textarea>
             </div>
-            <div class="panel">
-                <h3>Archivo 3 (Lógica / Estilos / JS)</h3>
-                <textarea id="code3" placeholder="Código interactivo, estilos o JS aparecerá o se pega aquí..."></textarea>
+            <!-- PANEL 3 -->
+            <div class="panel-card">
+                <input type="text" id="name3" class="file-name" value="script.js" placeholder="Nombre de Archivo 3">
+                <textarea id="code3" placeholder="Pega o genera el código 3..."></textarea>
+            </div>
+            <!-- PANEL 4 -->
+            <div class="panel-card">
+                <input type="text" id="name4" class="file-name" value="style.css" placeholder="Nombre de Archivo 4">
+                <textarea id="code4" placeholder="Pega o genera el código 4..."></textarea>
+            </div>
+            <!-- PANEL 5 -->
+            <div class="panel-card">
+                <input type="text" id="name5" class="file-name" value="" placeholder="Nombre de Archivo 5 (Opcional)">
+                <textarea id="code5" placeholder="Pega o genera el código 5 (Opcional)..."></textarea>
             </div>
         </div>
 
-        <!-- PANEL DE BOTONES GUIADOS DE OPERACIÓN -->
+        <!-- PANEL DE BOTONES DE ACCIÓN GUIADA -->
         <div class="actions-suite">
             <button id="btnCrear" class="btn-action pulse">🚀 Crear Aplicación</button>
             <button id="btnRevisar" class="btn-action info">🔍 Revisión de Apps y Códigos</button>
@@ -43,10 +56,10 @@
             <button id="btnBorrarTodo" class="btn-action danger">🗑️ Borrar Todo (Limpieza RAM)</button>
         </div>
 
-        <!-- PANEL DE EXPLICACIONES Y SUGERENCIAS -->
+        <!-- SECCIÓN DE EXPLICACIÓN Y RECTIFICACIÓN -->
         <div class="report-section">
-            <h3>Explicación del Proceso, Guías y Errores</h3>
-            <div id="sugerenciasPanel">El Maestro de Codificación te guiará aquí paso a paso...</div>
+            <h3>Sugerencias de Arquitectura, Explicación de Procesos y Códigos Sincronizados</h3>
+            <div id="sugerenciasPanel">Las guías maestras y las explicaciones completas de tus códigos empaquetados aparecerán aquí...</div>
         </div>
     </div>
     <script src="script.js"></script>
