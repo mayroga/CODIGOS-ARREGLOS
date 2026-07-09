@@ -1,32 +1,34 @@
 document.getElementById('btnCrear').addEventListener('click', () => lanzarProceso('/crear_app'));
+document.getElementById('btnExplorar').addEventListener('click', () => lanzarProceso('/explorar_app'));
 document.getElementById('btnRevisar').addEventListener('click', () => lanzarProceso('/revisar_app'));
 document.getElementById('btnCorregir').addEventListener('click', () => lanzarProceso('/corregir_app'));
 
-// BOTÓN DE DESTRUCCIÓN DE DATOS LOCAL
+// BOTÓN DE DESTRUCCIÓN DE DATOS LOCAL (RAM)
 document.getElementById('btnBorrarTodo').addEventListener('click', () => {
     document.getElementById('appDescripcion').value = "";
-    document.getElementById('sugerenciasPanel').innerText = "Las guías maestras y las explicaciones completas de tus códigos empaquetados aparecerán aquí...";
+    document.getElementById('sugerenciasPanel').innerText = "Las guías maestras, análisis de exploración y explicaciones completas de tus códigos aparecerán aquí...";
     for (let i = 1; i <= 5; i++) {
         document.getElementById(`code${i}`).value = "";
     }
-    window.gc && window.gc(); // Forzar recolección de basura si el dispositivo lo admite
+    window.gc && window.gc();
 });
 
 async function lanzarProceso(endpoint) {
     const desc = document.getElementById('appDescripcion').value;
     const btnCrear = document.getElementById('btnCrear');
+    const btnExplorar = document.getElementById('btnExplorar');
     const btnRevisar = document.getElementById('btnRevisar');
     const btnCorregir = document.getElementById('btnCorregir');
 
-    if (!desc.trim() && endpoint === '/crear_app') {
-        return alert("Por favor, introduce la descripción técnica del sistema que deseas crear.");
+    if (!desc.trim() && (endpoint === '/crear_app' || endpoint === '/explorar_app')) {
+        return alert("Por favor, introduce tus ideas o descripción técnica en la caja superior primero.");
     }
 
-    [btnCrear, btnRevisar, btnCorregir].forEach(b => b.disabled = true);
-    document.getElementById('sugerenciasPanel').innerText = "Abriendo hilos de procesamiento síncrono. Sincronizando dependencias cruzadas...";
+    // Bloqueamos los 4 botones de acción para proteger el flujo secuencial de datos
+    [btnCrear, btnExplorar, btnRevisar, btnCorregir].forEach(b => b.disabled = true);
+    document.getElementById('sugerenciasPanel').innerText = "Abriendo hilos de procesamiento y conectando de forma segura con la IA en tiempo real...";
 
     try {
-        // Recopilamos nombres y contenidos dinámicos del formulario
         const payload = { descripcion: desc };
         for (let i = 1; i <= 5; i++) {
             payload[`nombre${i}`] = document.getElementById(`name${i}`).value;
@@ -51,15 +53,14 @@ async function lanzarProceso(endpoint) {
             procesarStreamMultiArchivo(streamAcumulado);
         }
     } catch (error) {
-        alert("La conexión con el motor de procesamiento local se vio interrumpida.");
+        alert("La transmisión con el núcleo de procesamiento local fue interrumpida.");
     } finally {
-        [btnCrear, btnRevisar, btnCorregir].forEach(b => b.disabled = false);
+        [btnCrear, btnExplorar, btnRevisar, btnCorregir].forEach(b => b.disabled = false);
     }
 }
 
-// Algoritmo de extracción estricta basado en bloques abiertos :::INICIO::: y :::FIN:::
 function procesarStreamMultiArchivo(texto) {
-    // 1. Procesar Sugerencias / Explicación del Maestro
+    // 1. Procesar Sugerencias, Consultoría o Informes de Exploración
     const inicioSuj = texto.indexOf(":::INICIO_SUGERENCIAS:::");
     const finSuj = texto.indexOf(":::FIN_SUGERENCIAS:::");
     if (inicioSuj !== -1) {
@@ -67,7 +68,7 @@ function procesarStreamMultiArchivo(texto) {
         document.getElementById('sugerenciasPanel').innerText = texto.substring(inicioSuj + 24, corteFin).trim();
     }
 
-    // 2. Procesar los hasta 5 archivos dinámicos de forma secuencial
+    // 2. Procesar e Inyectar códigos en los 5 paneles si el endpoint los genera
     let posicionActual = 0;
     let contadorPaneles = 1;
 
@@ -77,7 +78,6 @@ function procesarStreamMultiArchivo(texto) {
         const finM = texto.indexOf(":::FIN_ARCHIVO:::", inicioM);
 
         if (saltoLinea !== -1 && saltoLinea > inicioM) {
-            // Extraer el nombre que propuso la IA para contrastarlo o inyectarlo
             const encabezado = texto.substring(inicioM + 20, saltoLinea).trim();
             const finBloque = (finM !== -1) ? finM : texto.length;
             const codigoLimpio = texto.substring(saltoLinea + 1, finBloque).trim();
@@ -87,12 +87,11 @@ function procesarStreamMultiArchivo(texto) {
 
             if (areaCodigo) {
                 if (encabezado && inputNombre.value.trim() === "") {
-                    inputNombre.value = encabezado; // Si el panel estaba vacío, le asignamos el nombre sugerido
+                    inputNombre.value = encabezado;
                 }
                 areaCodigo.value = codigoLimpio;
             }
         }
-        
         posicionActual = (finM !== -1) ? finM + 17 : texto.length;
         contadorPaneles++;
     }
